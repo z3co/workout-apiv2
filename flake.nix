@@ -12,6 +12,9 @@
     systems = [
       "x86_64-linux" "x86_64-darwin"
     ];
+    imports = [
+      ./package.nix
+    ];
     perSystem = {pkgs, ... }: {
       devShells.default = pkgs.mkShell {
         name = "go";
