@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:alpine
+    environment:
+      - POSTGRES_USER=${PGUSER}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
+      - POSTGRES_HOST=${PGHOST}
+      - POSTGRES_DB=${PGDATABASE}
+    volumes:
+      - data:/run/lib/postgres
+    ports:
+      - "5432:5432"
+volumes:
+  data:
