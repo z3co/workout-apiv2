@@ -1,14 +1,25 @@
-generate:
+# Generate go from sql with sqlc
+[group("sqlc")]
+generate: 
 	sqlc generate
 
-db-up:
-	docker compose up -d
-
-db-down:
-	docker compose down -v --rmi all
-
-test: generate
+# Test the package
+[group("go")]
+test: generate 
 	go test ./...
 
-dev: generate test
+# Run and test the package
+[group("go")]
+dev: generate test 
 	go run main.go
+
+# Start the local db
+[group("db")]
+up: 
+	docker compose up -d
+
+# Stop and remove the local db
+[group("db")]
+down: 
+	docker compose down -v --rmi all
+
