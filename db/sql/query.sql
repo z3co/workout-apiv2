@@ -1,9 +1,12 @@
 -- name: ListExercises :many
 SELECT 
+	id,
 	name,
 	description,
 	href,
+	sets,
 	equipment,
+	replacement,
 	target_muscle
 FROM exercises;
 
@@ -12,37 +15,48 @@ SELECT
 	name,
 	description,
 	href,
+	sets,
 	equipment,
+	replacement,
 	target_muscle
 FROM exercises
 WHERE id = $1 LIMIT 1;
 
 -- name: GetExerciseByEquipment :many
 SELECT 
+	id,
 	name,
 	description,
 	href,
+	sets,
 	equipment,
+	replacement,
 	target_muscle
 FROM exercises
 WHERE equipment = $1;
 
 -- name: GetExerciseByMuscle :many
 SELECT 
+	id,
 	name,
 	description,
 	href,
+	sets,
 	equipment,
+	replacement,
 	target_muscle
 FROM exercises
 WHERE target_muscle = $1;
 
 -- name: GetReplaceMentExercise :one
 SELECT 
+	e.id,
 	e.name,
 	e.description,
 	e.href,
+	e.sets,
 	e.equipment,
+	e.replacement,
 	e.target_muscle
 FROM exercises o JOIN exercises e ON o.replacement = e.id
 WHERE o.id = $1 LIMIT 1;

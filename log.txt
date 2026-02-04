@@ -1,0 +1,104 @@
+=== RUN   TestDBInsert
+2026/02/04 22:03:02 github.com/testcontainers/testcontainers-go - Connected to docker: 
+  Server Version: 29.1.5
+  API Version: 1.51
+  Operating System: NixOS 26.05 (Yarara)
+  Total Memory: 32008 MB
+  Testcontainers for Go Version: v0.40.0
+  Resolved Docker Host: unix:///var/run/docker.sock
+  Resolved Docker Socket Path: /var/run/docker.sock
+  Test SessionID: d0d7fd492d59e170cd4a237f4896f304e5c233650e3191c31a2d344c4274893c
+  Test ProcessID: df92fb5d-112c-44fc-af3e-89f25f0bffd6
+2026/02/04 22:03:02 🐳 Creating container for image postgres:alpine
+2026/02/04 22:03:02 🐳 Creating container for image testcontainers/ryuk:0.13.0
+2026/02/04 22:03:02 ✅ Container created: 2930f44cfb26
+2026/02/04 22:03:02 🐳 Starting container: 2930f44cfb26
+2026/02/04 22:03:02 ✅ Container started: 2930f44cfb26
+2026/02/04 22:03:02 ⏳ Waiting for container id 2930f44cfb26 image: testcontainers/ryuk:0.13.0. Waiting for: port 8080/tcp to be listening
+2026/02/04 22:03:02 Shell not found in container
+2026/02/04 22:03:02 🔔 Container is ready: 2930f44cfb26
+2026/02/04 22:03:02 ✅ Container created: 914a2d993e0b
+2026/02/04 22:03:02 🐳 Starting container: 914a2d993e0b
+2026/02/04 22:03:02 ✅ Container started: 914a2d993e0b
+2026/02/04 22:03:02 ⏳ Waiting for container id 914a2d993e0b image: postgres:alpine. Waiting for: all of: [log message "database system is ready to accept connections" (occurrence: 2), port 5432/tcp to be listening]
+2026/02/04 22:03:03 🔔 Container is ready: 914a2d993e0b
+=== RUN   TestDBInsert/proper_insert_and_get
+    main_test.go:86: 
+        	Error Trace:	/home/z3co/personal/workout-apiv2/main_test.go:86
+        	Error:      	Not equal: 
+        	            	expected: []db.GetExerciseRow{db.GetExerciseRow{Name:"chest press", Description:pgtype.Text{String:"exercies", Valid:true}, Href:pgtype.Text{String:"hello", Valid:true}, Sets:3, Equipment:pgtype.Text{String:"barbell", Valid:true}, Replacement:pgtype.Int8{Int64:0, Valid:false}, TargetMuscle:"chest"}, db.GetExerciseRow{Name:"bench press", Description:pgtype.Text{String:"exercies", Valid:true}, Href:pgtype.Text{String:"hello", Valid:true}, Sets:3, Equipment:pgtype.Text{String:"barbell", Valid:true}, Replacement:pgtype.Int8{Int64:0, Valid:false}, TargetMuscle:"chest"}, db.GetExerciseRow{Name:"leg press", Description:pgtype.Text{String:"exercies", Valid:true}, Href:pgtype.Text{String:"hello", Valid:true}, Sets:3, Equipment:pgtype.Text{String:"machine", Valid:true}, Replacement:pgtype.Int8{Int64:0, Valid:false}, TargetMuscle:"legs"}}
+        	            	actual  : []db.GetExerciseRow{db.GetExerciseRow{Name:"chest press", Description:pgtype.Text{String:"exercies", Valid:true}, Href:pgtype.Text{String:"hello", Valid:true}, Sets:3, Equipment:pgtype.Text{String:"barbell", Valid:true}, Replacement:pgtype.Int8{Int64:1, Valid:true}, TargetMuscle:"chest"}, db.GetExerciseRow{Name:"bench press", Description:pgtype.Text{String:"exercies", Valid:true}, Href:pgtype.Text{String:"hello", Valid:true}, Sets:3, Equipment:pgtype.Text{String:"barbell", Valid:true}, Replacement:pgtype.Int8{Int64:1, Valid:true}, TargetMuscle:"chest"}, db.GetExerciseRow{Name:"leg press", Description:pgtype.Text{String:"exercies", Valid:true}, Href:pgtype.Text{String:"hello", Valid:true}, Sets:3, Equipment:pgtype.Text{String:"machine", Valid:true}, Replacement:pgtype.Int8{Int64:1, Valid:true}, TargetMuscle:"legs"}}
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -17,4 +17,4 @@
+        	            	   Replacement: (pgtype.Int8) {
+        	            	-   Int64: (int64) 0,
+        	            	-   Valid: (bool) false
+        	            	+   Int64: (int64) 1,
+        	            	+   Valid: (bool) true
+        	            	   },
+        	            	@@ -38,4 +38,4 @@
+        	            	   Replacement: (pgtype.Int8) {
+        	            	-   Int64: (int64) 0,
+        	            	-   Valid: (bool) false
+        	            	+   Int64: (int64) 1,
+        	            	+   Valid: (bool) true
+        	            	   },
+        	            	@@ -59,4 +59,4 @@
+        	            	   Replacement: (pgtype.Int8) {
+        	            	-   Int64: (int64) 0,
+        	            	-   Valid: (bool) false
+        	            	+   Int64: (int64) 1,
+        	            	+   Valid: (bool) true
+        	            	   },
+        	Test:       	TestDBInsert/proper_insert_and_get
+2026/02/04 22:03:03 🐳 Stopping container: 914a2d993e0b
+2026/02/04 22:03:04 ✅ Container stopped: 914a2d993e0b
+2026/02/04 22:03:04 🐳 Terminating container: 914a2d993e0b
+2026/02/04 22:03:04 🚫 Container terminated: 914a2d993e0b
+--- FAIL: TestDBInsert (1.87s)
+    --- FAIL: TestDBInsert/proper_insert_and_get (0.02s)
+=== RUN   TestRunApi
+2026/02/04 22:03:04 🐳 Creating container for image postgres:alpine
+2026/02/04 22:03:04 ✅ Container created: 086462295aa3
+2026/02/04 22:03:04 🐳 Starting container: 086462295aa3
+2026/02/04 22:03:04 ✅ Container started: 086462295aa3
+2026/02/04 22:03:04 ⏳ Waiting for container id 086462295aa3 image: postgres:alpine. Waiting for: all of: [log message "database system is ready to accept connections" (occurrence: 2), port 5432/tcp to be listening]
+2026/02/04 22:03:05 🔔 Container is ready: 086462295aa3
+=== RUN   TestRunApi/test_get_exercises
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /exercises                --> github.com/z3co/workout-apiv2.(*Server).GetExercisesHandler-fm (3 handlers)
+[GIN-debug] GET    /exercise/:id             --> github.com/z3co/workout-apiv2.(*Server).GetExerciseByIdHandler-fm (3 handlers)
+[GIN-debug] GET    /equipment/:equipment     --> github.com/z3co/workout-apiv2.(*Server).GetExerciseByEquipment-fm (3 handlers)
+[GIN-debug] GET    /replacement/:id          --> github.com/z3co/workout-apiv2.(*Server).GetReplacmentByIdHandler-fm (3 handlers)
+[GIN-debug] GET    /muscle/:muscle           --> github.com/z3co/workout-apiv2.(*Server).GetExerciseByMuscle-fm (3 handlers)
+[GIN-debug] GET    /sets/:id                 --> github.com/z3co/workout-apiv2.(*Server).GetSetsByExerciseId-fm (3 handlers)
+[GIN-debug] POST   /exercise                 --> github.com/z3co/workout-apiv2.(*Server).CreateExercise-fm (3 handlers)
+[GIN] 2026/02/04 - 22:03:05 | 404 |       17.09µs |                 | GET      "/exercises"
+Error #01: exercise not found: conn closed
+    main_test.go:158: 
+        	Error Trace:	/home/z3co/personal/workout-apiv2/main_test.go:158
+        	Error:      	Not equal: 
+        	            	expected: 200
+        	            	actual  : 404
+        	Test:       	TestRunApi/test_get_exercises
+exercise not found: conn closed
+    main_test.go:163: Response body could not be parsed: invalid character 'e' looking for beginning of value
+        exercise not found: conn closed
+2026/02/04 22:03:05 🐳 Stopping container: 086462295aa3
+2026/02/04 22:03:05 ✅ Container stopped: 086462295aa3
+2026/02/04 22:03:05 🐳 Terminating container: 086462295aa3
+2026/02/04 22:03:05 🚫 Container terminated: 086462295aa3
+--- FAIL: TestRunApi (1.60s)
+    --- FAIL: TestRunApi/test_get_exercises (0.00s)
+FAIL
+FAIL	github.com/z3co/workout-apiv2	3.496s
+?   	github.com/z3co/workout-apiv2/db/gen	[no test files]
+FAIL

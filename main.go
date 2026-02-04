@@ -9,8 +9,8 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/jackc/pgx/v5/pgxpool"
 	db "github.com/z3co/workout-apiv2/db/gen"
 )
 
@@ -19,7 +19,7 @@ type Server struct {
 }
 
 func (server *Server) GetExercisesHandler(ctx *gin.Context) {
-	exercises, err := server.store.ListExercises(ctx.Request.Context())
+	exercises, err := server.store.ListExercises(context.Background())
 	if err != nil {
 		errString := fmt.Errorf("exercise not found: %s", err)
 		ctx.Error(errString)
@@ -169,12 +169,13 @@ func (server *Server) CreateExercise(ctx *gin.Context) {
 	ctx.String(http.StatusOK, fmt.Sprintf("Created new exercise with id: %v", exerciseId))
 }
 
-func main() {
-	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+  
+
+func RunApi(dbUrl string) *gin.Engine {
+	conn, err := pgxpool.New(context.Background(), dbUrl)
 	if err != nil {
 		log.Fatalf("Unable to connect to db: %v\n", err)
 	}
-	defer conn.Close(context.Background())
 
 	server := &Server{
 		store: db.New(conn),
@@ -190,5 +191,10 @@ func main() {
 	router.GET("/sets/:id", server.GetSetsByExerciseId)
 	router.POST("/exercise", server.CreateExercise)
 
+	return router
+}
+
+func main() {
+	router := RunApi(os.Getenv("DATABASE_URL"))
 	log.Fatal(router.Run())
 }

@@ -16,7 +16,9 @@ SELECT
 	name,
 	description,
 	href,
+	sets,
 	equipment,
+	replacement,
 	target_muscle
 FROM exercises
 WHERE id = $1 LIMIT 1
@@ -26,7 +28,9 @@ type GetExerciseRow struct {
 	Name         string
 	Description  pgtype.Text
 	Href         pgtype.Text
+	Sets         int32
 	Equipment    pgtype.Text
+	Replacement  pgtype.Int8
 	TargetMuscle string
 }
 
@@ -37,7 +41,9 @@ func (q *Queries) GetExercise(ctx context.Context, id int64) (GetExerciseRow, er
 		&i.Name,
 		&i.Description,
 		&i.Href,
+		&i.Sets,
 		&i.Equipment,
+		&i.Replacement,
 		&i.TargetMuscle,
 	)
 	return i, err
@@ -45,20 +51,26 @@ func (q *Queries) GetExercise(ctx context.Context, id int64) (GetExerciseRow, er
 
 const getExerciseByEquipment = `-- name: GetExerciseByEquipment :many
 SELECT 
+	id,
 	name,
 	description,
 	href,
+	sets,
 	equipment,
+	replacement,
 	target_muscle
 FROM exercises
 WHERE equipment = $1
 `
 
 type GetExerciseByEquipmentRow struct {
+	ID           int64
 	Name         string
 	Description  pgtype.Text
 	Href         pgtype.Text
+	Sets         int32
 	Equipment    pgtype.Text
+	Replacement  pgtype.Int8
 	TargetMuscle string
 }
 
@@ -72,10 +84,13 @@ func (q *Queries) GetExerciseByEquipment(ctx context.Context, equipment pgtype.T
 	for rows.Next() {
 		var i GetExerciseByEquipmentRow
 		if err := rows.Scan(
+			&i.ID,
 			&i.Name,
 			&i.Description,
 			&i.Href,
+			&i.Sets,
 			&i.Equipment,
+			&i.Replacement,
 			&i.TargetMuscle,
 		); err != nil {
 			return nil, err
@@ -90,20 +105,26 @@ func (q *Queries) GetExerciseByEquipment(ctx context.Context, equipment pgtype.T
 
 const getExerciseByMuscle = `-- name: GetExerciseByMuscle :many
 SELECT 
+	id,
 	name,
 	description,
 	href,
+	sets,
 	equipment,
+	replacement,
 	target_muscle
 FROM exercises
 WHERE target_muscle = $1
 `
 
 type GetExerciseByMuscleRow struct {
+	ID           int64
 	Name         string
 	Description  pgtype.Text
 	Href         pgtype.Text
+	Sets         int32
 	Equipment    pgtype.Text
+	Replacement  pgtype.Int8
 	TargetMuscle string
 }
 
@@ -117,10 +138,13 @@ func (q *Queries) GetExerciseByMuscle(ctx context.Context, targetMuscle string) 
 	for rows.Next() {
 		var i GetExerciseByMuscleRow
 		if err := rows.Scan(
+			&i.ID,
 			&i.Name,
 			&i.Description,
 			&i.Href,
+			&i.Sets,
 			&i.Equipment,
+			&i.Replacement,
 			&i.TargetMuscle,
 		); err != nil {
 			return nil, err
@@ -135,20 +159,26 @@ func (q *Queries) GetExerciseByMuscle(ctx context.Context, targetMuscle string) 
 
 const getReplaceMentExercise = `-- name: GetReplaceMentExercise :one
 SELECT 
+	e.id,
 	e.name,
 	e.description,
 	e.href,
+	e.sets,
 	e.equipment,
+	e.replacement,
 	e.target_muscle
 FROM exercises o JOIN exercises e ON o.replacement = e.id
 WHERE o.id = $1 LIMIT 1
 `
 
 type GetReplaceMentExerciseRow struct {
+	ID           int64
 	Name         string
 	Description  pgtype.Text
 	Href         pgtype.Text
+	Sets         int32
 	Equipment    pgtype.Text
+	Replacement  pgtype.Int8
 	TargetMuscle string
 }
 
@@ -156,10 +186,13 @@ func (q *Queries) GetReplaceMentExercise(ctx context.Context, id int64) (GetRepl
 	row := q.db.QueryRow(ctx, getReplaceMentExercise, id)
 	var i GetReplaceMentExerciseRow
 	err := row.Scan(
+		&i.ID,
 		&i.Name,
 		&i.Description,
 		&i.Href,
+		&i.Sets,
 		&i.Equipment,
+		&i.Replacement,
 		&i.TargetMuscle,
 	)
 	return i, err
@@ -245,19 +278,25 @@ func (q *Queries) InsertSet(ctx context.Context, arg InsertSetParams) error {
 
 const listExercises = `-- name: ListExercises :many
 SELECT 
+	id,
 	name,
 	description,
 	href,
+	sets,
 	equipment,
+	replacement,
 	target_muscle
 FROM exercises
 `
 
 type ListExercisesRow struct {
+	ID           int64
 	Name         string
 	Description  pgtype.Text
 	Href         pgtype.Text
+	Sets         int32
 	Equipment    pgtype.Text
+	Replacement  pgtype.Int8
 	TargetMuscle string
 }
 
@@ -271,10 +310,13 @@ func (q *Queries) ListExercises(ctx context.Context) ([]ListExercisesRow, error)
 	for rows.Next() {
 		var i ListExercisesRow
 		if err := rows.Scan(
+			&i.ID,
 			&i.Name,
 			&i.Description,
 			&i.Href,
+			&i.Sets,
 			&i.Equipment,
+			&i.Replacement,
 			&i.TargetMuscle,
 		); err != nil {
 			return nil, err
