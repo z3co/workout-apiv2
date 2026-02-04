@@ -192,6 +192,57 @@ func (q *Queries) GetSetsByExerciseId(ctx context.Context, exerciseID int64) ([]
 	return items, nil
 }
 
+const insertExercise = `-- name: InsertExercise :one
+INSERT INTO exercises (
+	name, description, sets, href, equipment, target_muscle, replacement
+) VALUES (
+	$1, $2, $3, $4, $5, $6, $7
+) RETURNING id
+`
+
+type InsertExerciseParams struct {
+	Name         string
+	Description  pgtype.Text
+	Sets         int32
+	Href         pgtype.Text
+	Equipment    pgtype.Text
+	TargetMuscle string
+	Replacement  pgtype.Int8
+}
+
+func (q *Queries) InsertExercise(ctx context.Context, arg InsertExerciseParams) (int64, error) {
+	row := q.db.QueryRow(ctx, insertExercise,
+		arg.Name,
+		arg.Description,
+		arg.Sets,
+		arg.Href,
+		arg.Equipment,
+		arg.TargetMuscle,
+		arg.Replacement,
+	)
+	var id int64
+	err := row.Scan(&id)
+	return id, err
+}
+
+const insertSet = `-- name: InsertSet :exec
+INSERT INTO sets (
+	exercise_id, reps
+) VALUES (
+	$1, $2
+)
+`
+
+type InsertSetParams struct {
+	ExerciseID int64
+	Reps       int32
+}
+
+func (q *Queries) InsertSet(ctx context.Context, arg InsertSetParams) error {
+	_, err := q.db.Exec(ctx, insertSet, arg.ExerciseID, arg.Reps)
+	return err
+}
+
 const listExercises = `-- name: ListExercises :many
 SELECT 
 	name,

@@ -52,3 +52,17 @@ SELECT
 	reps
 FROM sets
 WHERE exercise_id = $1;
+
+-- name: InsertExercise :one
+INSERT INTO exercises (
+	name, description, sets, href, equipment, target_muscle, replacement
+) VALUES (
+	$1, $2, $3, $4, $5, $6, $7
+) RETURNING id;
+
+-- name: InsertSet :exec
+INSERT INTO sets (
+	exercise_id, reps
+) VALUES (
+	$1, $2
+); 

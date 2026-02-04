@@ -12,7 +12,6 @@ CREATE TABLE "exercises" (
 CREATE TABLE "sets" (
   "id" BIGSERIAL PRIMARY KEY,
   "exercise_id" BIGSERIAL NOT NULL,
-  "weight" bigint NOT NULL,
   "reps" int NOT NULL
 );
 

@@ -22,6 +22,5 @@ type Exercise struct {
 type Set struct {
 	ID         int64
 	ExerciseID int64
-	Weight     int64
 	Reps       int32
 }

@@ -1,0 +1,11 @@
+package main
+
+import (
+	"testing"
+	"github.com/testcontainers/testcontainers-go/modules/postgres"
+
+)
+
+func TestDBFunctions(t *testing.T) {
+	postgresContainer, err := pos
+}
