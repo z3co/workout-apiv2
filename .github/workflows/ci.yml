@@ -2,13 +2,13 @@ name: CI
 on: [push]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-
-    setps:
+    steps:
       - uses: actions/checkout@v4
 
       - uses: extractions/setup-just@v3
-        name: Run tests
+
+      - name: Run tests
         run: just test
 
