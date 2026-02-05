@@ -157,11 +157,16 @@ func TestRunApi(t *testing.T) {
 
 		assert.Equal(t, 200, w.Code)
 		var response []testCase
-		fmt.Println(w.Body.String())
 		err := json.Unmarshal(w.Body.Bytes(), &response)
 		if err != nil {
 			t.Fatalf("Response body could not be parsed: %v\n%v", err, w.Body)
 		}
+		var returnCases []testCase
+		for _, m := range testCases {
+			m.Reps = nil
+			m.code = 0
+			returnCases = append(returnCases, m)
+		}
+		assert.Equal(t, returnCases, response)
 	})
-
 }

@@ -5,7 +5,7 @@ generate:
 
 # Test the package
 [group("go")]
-test: generate 
+test:  
 	go test ./...
 
 # Run and test the package
