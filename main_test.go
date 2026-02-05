@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
@@ -110,11 +111,11 @@ func TestRunApi(t *testing.T) {
 	type testCase struct {
 		// Inputs
 		db.InsertExerciseParams
-		Reps []int `json:"-"`
+		Reps []int32 `json:"-"`
 		// Expected values
 		code int
 	}
-	testSets := []int{
+	testSets := []int32{
 		10, 8, 6,
 	}
 
@@ -167,5 +168,30 @@ func TestRunApi(t *testing.T) {
 			returnCases = append(returnCases, m)
 		}
 		assert.Equal(t, returnCases, response)
+	})
+	t.Run("test get exercise", func(t *testing.T) {
+		router := RunApi(connStr)	
+		for i, m := range returnIds {
+			w := httptest.NewRecorder()
+			req, _ := http.NewRequest(http.MethodGet, fmt.Sprintf("/exercise/%v", m), nil)
+			router.ServeHTTP(w, req)
+
+			var response testCase
+			err := json.Unmarshal(w.Body.Bytes(), &response)
+			if err != nil {
+				t.Fatalf("Response body could not be parsed: %v", err)
+			}
+			response.code = w.Code
+			setW := httptest.NewRecorder()
+			setReq, _ := http.NewRequest(http.MethodGet, fmt.Sprintf("/sets/%v", m), nil)
+			router.ServeHTTP(setW, setReq)
+			var sets []int32
+			err = json.Unmarshal(setW.Body.Bytes(), &sets)
+			if err != nil {
+				t.Fatalf("Response body could not be parsed: %v", err)
+			}
+			response.Reps = sets
+			assert.Equal(t, testCases[i], response)
+		}
 	})
 }

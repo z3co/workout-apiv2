@@ -97,7 +97,7 @@ func (server *Server) GetReplacmentByIdHandler(ctx *gin.Context) {
 func (server *Server) GetSetsByExerciseId(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		errString := fmt.Errorf("bad request %s\n", err)
+		errString := fmt.Errorf("bad request %s", err)
 		ctx.Error(errString)
 		ctx.String(http.StatusBadRequest, errString.Error())
 		return
