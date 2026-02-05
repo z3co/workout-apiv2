@@ -111,6 +111,7 @@ func TestRunApi(t *testing.T) {
 	type testCase struct {
 		// Inputs
 		db.InsertExerciseParams
+		Id   int64
 		Reps []int32 `json:"-"`
 		// Expected values
 		code int
@@ -131,12 +132,12 @@ func TestRunApi(t *testing.T) {
 	}
 	store := db.New(conn)
 	var returnIds []int64
-	for _, exercise := range testCases {
+	for i, exercise := range testCases {
 		id, err := store.InsertExercise(ctx, exercise.InsertExerciseParams)
 		if err != nil {
 			t.Fatalf("could not insert exercises: %s", err)
 		}
-		returnIds = append(returnIds, id)
+		testCases[i].Id = id
 	}
 	for _, id := range returnIds {
 		for _, reps := range testSets {
@@ -170,7 +171,7 @@ func TestRunApi(t *testing.T) {
 		assert.Equal(t, returnCases, response)
 	})
 	t.Run("test get exercise", func(t *testing.T) {
-		router := RunApi(connStr)	
+		router := RunApi(connStr)
 		for i, m := range returnIds {
 			w := httptest.NewRecorder()
 			req, _ := http.NewRequest(http.MethodGet, fmt.Sprintf("/exercise/%v", m), nil)
@@ -192,6 +193,61 @@ func TestRunApi(t *testing.T) {
 			}
 			response.Reps = sets
 			assert.Equal(t, testCases[i], response)
+		}
+	})
+	t.Run("get exercise by muscle", func(t *testing.T) {
+		router := RunApi(connStr)
+		for _, m := range testCases {
+			w := httptest.NewRecorder()
+			req, _ := http.NewRequest(http.MethodGet, fmt.Sprintf("/muscle/%v", m.TargetMuscle), nil)
+			router.ServeHTTP(w, req)
+
+			var response []testCase
+			err := json.Unmarshal(w.Body.Bytes(), &response)
+			if err != nil {
+				t.Fatalf("Response body could not be parsed: %v", w.Body)
+			}
+			for _, n := range response {
+				n.Reps = testSets
+				n.code = w.Code
+				assert.Equal(t, m, n)
+			}
+		}
+	})
+	t.Run("get exercise by equipment", func(t *testing.T) {
+		router := RunApi(connStr)
+		for _, m := range testCases {
+			w := httptest.NewRecorder()
+			req, _ := http.NewRequest(http.MethodGet, fmt.Sprintf("/equipment/%v", m.Equipment), nil)
+			router.ServeHTTP(w, req)
+
+			var response []testCase
+			err := json.Unmarshal(w.Body.Bytes(), &response)
+			if err != nil {
+				t.Fatalf("Response body could not be parsed: %v", w.Body)
+			}
+			for _, n := range response {
+				n.Reps = testSets
+				n.code = w.Code
+				assert.Equal(t, m, n)
+			}
+		}
+	})
+	t.Run("get replacement by id", func(t *testing.T) {
+		router := RunApi(connStr)
+		for _, m := range testCases {
+			w := httptest.NewRecorder()
+			req, _ := http.NewRequest(http.MethodGet, fmt.Sprintf("/replacement/%v", m.Id), nil)
+			router.ServeHTTP(w, req)
+
+			var response testCase
+			err := json.Unmarshal(w.Body.Bytes(), &response)
+			if err != nil {
+				t.Fatalf("Response body could not be parsed: %v", w.Body)
+			}
+			response.Reps = testSets
+			response.code = w.Code
+			assert.Equal(t, testCases[0], response)
 		}
 	})
 }
